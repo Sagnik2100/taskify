@@ -17,20 +17,21 @@ export async function POST(request: NextRequest) {
       email: string;
       password: string;
     };
-
+    console.log(email,password);
     // Cast the query result because your helper is untyped
     const [rows] = (await query(
-      "CALL sp_validateLogin(?,?)",
+      "SELECT 1 AS isValidated FROM user WHERE email = ? AND password = ?",
       [email, password]
     )) as [LoginRow[], unknown];
 
-    // Optional: check if rows returned
     if (!rows || rows.length === 0) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-    }
+  return NextResponse.json({ isValidated: false }, { status: 401 });
+  }
+
+  return NextResponse.json({ isValidated: true });
 
     // Return first row
-    return NextResponse.json(rows[0]);
+    return NextResponse.json(rows);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },

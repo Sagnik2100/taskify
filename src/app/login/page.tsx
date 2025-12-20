@@ -33,10 +33,11 @@ export default function LoginPage() {
 
     const data = await res.json();
 
-    // Assuming your API returns a property `isValidated`
-    if (data[0]?.isValidated === 1) {
-      router.push("../tasks");
-    }
+    if (res.ok && data.isValidated) {
+  router.push("/tasks");
+  } else {
+    alert("wrong credential")
+  }
   }
 
   return (
